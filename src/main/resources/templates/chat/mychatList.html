@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>내 참가 목록</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.png">
+    <link rel="manifest" href="assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="/assets/css/theme.css" rel="stylesheet"/>
+    <link href="../assets/css/header.css" rel="stylesheet"/>
+
+    <style>
+        .btn{
+            font-family: TTWanjunuricheR;
+            font-weight: normal;
+        }
+        button{
+            font-family: TTWanjunuricheR;
+        }
+        #accordionExample {
+
+            .accordion-button:focus {
+                background: #92b5e3;
+                box-shadow: none;
+            }
+
+            .accordion-button:not(.collapsed) {
+                background: #92b5e3;
+
+            }
+        }
+
+        .card {
+            display: inline-block;
+            margin: 10px;
+            flex-basis: 30%;
+            font-family: TTWanjunuricheR;
+
+        }
+
+        a {
+
+            color: black;
+            text-decoration: none;
+        }
+
+        .col-4 {
+            font-family: TTWanjunuricheR;
+        }
+    </style>
+
+</head>
+<body>
+<header th:replace="header.html::header"></header>
+<main class="main" id="top">
+    <h3 style="text-align: center; margin-top: 10px">[[${session.userid}]] 님의 참여 목록</h3>
+    <div class="container text-center"
+         style="margin-top: 20px; border-top: 1px solid black; border-bottom: 1px solid black ">
+        <div class="row" style="margin-top: 20px">
+            <div class="col-8">
+                <div class="row" style="display: flex; flex-wrap: wrap;">
+                    <th:block th:each="group, status: ${groups}">
+                        <div class="card col-md-4">
+                            <img th:src="|@{/uploads}/${group.grouppic}|" class="card-img-top" alt="..." style="width: 200px; height: 150px">
+                            <div class="card-body">
+                                <h5 class="card-title">[[${group.groupname}]]</h5>
+                                <p class="card-text">[[${group.groupdetail}]]</p>
+                                <a th:href="|../group/@{groupdetail(groupidx=${group.groupidx})}|"
+                                   class="btn btn-primary">그룹으로 이동하기</a>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+            <div class="col-4">
+                <p>그룹 채팅방</p>
+                <div class="accordion" id="accordionExample" style="height: 700px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center"
+         style="margin-top: 50px; border-top: 1px solid black; border-bottom: 1px solid black ">
+        <p>승인 대기중 목록</p>
+        <div class="row" style="margin-top: 20px">
+            <div class="col-8">
+                <div class="row" style="display: flex; flex-wrap: wrap;">
+                    <th:block th:each="admisson, status: ${admissons}">
+                        <div class="card col-md-4">
+                            <img th:src="|@{/uploads}/${admisson.grouppic}|" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">[[${admisson.groupname}]]</h5>
+                                <p class="card-text">[[${admisson.groupdetail}]]</p>
+                                <a th:href="|../group/@{groupdetail(groupidx=${admisson.groupidx})}|"
+                                   class="btn btn-primary">그룹으로 이동하기</a>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center"
+         style="margin-top: 50px; border-top: 1px solid black; border-bottom: 1px solid black ">
+        <p>좋아요</p>
+        <div class="row" style="margin-top: 20px">
+            <div class="col-8">
+                <div class="row" style="display: flex; flex-wrap: wrap;">
+                    <th:block th:each="heart, status: ${hearts}">
+                        <div class="card col-md-4">
+                            <img th:src="|@{/uploads}/${heart.grouppic}|" class="card-img-top" alt="..." style="width: 200px; height: 150px">
+                            <div class="card-body">
+                                <h5 class="card-title">[[${heart.groupname}]]</h5>
+                                <p class="card-text">[[${heart.groupdetail}]]</p>
+                                <a th:href="|../group/@{groupdetail(groupidx=${heart.groupidx})}|"
+                                   class="btn btn-primary">그룹으로 이동하기</a>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    const chuserid = '[[${session.userid}]]'
+</script>
+<script src="../assets/js/mychatList.js"></script>
+<script src="../vendors/@popperjs/popper.min.js"></script>
+<script src="../vendors/bootstrap/bootstrap.min.js"></script>
+<script src="../vendors/is/is.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+<script src="../vendors/fontawesome/all.min.js"></script>
+<script src="../vendors/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../vendors/imagesloaded/imagesloaded.pkgd.js"></script>
+<script src="../vendors/isotope-packery/packery-mode.pkgd.min.js"></script>
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/index.js"></script>
+</body>
+</html>

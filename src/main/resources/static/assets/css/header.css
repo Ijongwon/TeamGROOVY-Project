@@ -1,0 +1,86 @@
+body {
+  padding-top: 60px;
+}
+
+header {
+  height: 50px;
+  padding: 1rem;
+  color: white;
+  background: linear-gradient(to right,#cc95c0,#dbd4b4,#7aa1d2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  /* width: 100% */
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* ============================================================== */
+
+.custom-navbar {
+  padding: 10px;
+  width: 100%;
+  /* height: 100%; */
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-list ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.nav-list ul li {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-list a {
+  text-decoration: none;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info img {
+  border-radius: 50%;
+}
+
+.myinfo{
+  display: flex;
+}
+
+.user-info p {
+  margin: 0 4px;
+}
+
+.user-info a {
+  margin: 0 4px;
+}
+
+/* ============================================================== */
+
+@font-face {
+  font-family: 'TTWanjunuricheR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/TTWanjunuricheR.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+li {
+  font-family: 'TTWanjunuricheR';
+}

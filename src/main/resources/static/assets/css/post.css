@@ -1,0 +1,58 @@
+body {
+    background-color: rgb(243, 243, 243);
+    font-family: 'TTWanjunuricheR';
+}
+
+
+.content{
+    width: 70%;
+    height: 300px;
+    resize: none;
+}
+.post{
+    margin: 150px;
+    margin-right: 400px;
+    margin-left: 400px;
+    background-color: white;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+    border: solid 1px #555252;
+}
+.postid{
+    width: 70%;
+}
+
+.content form-control mx-auto{
+    margin-left: 50px;
+}
+
+.imagefile{
+    display: none;
+    text-align: center;
+    margin-left: 50px;
+    /*padding-right: 100px;*/
+
+}
+.inupload{
+    margin-left: 20px;
+    margin-bottom: 10px;
+    width:90px;
+    height:30px;
+    background: #747DEF;
+    color: white;
+    border-radius:10px;
+    /*box-shadow: 0px 0px 2px 2px rgb(0,0,0);*/
+}
+
+.postbt{
+    margin-top: 35px;
+    width:95px;
+    height:45px;
+    background: #53545d;
+    color: white;
+    border: solid 1px;
+    border-radius:10px;
+    /*margin-left: 350px;*/
+}
+

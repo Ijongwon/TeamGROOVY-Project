@@ -1,0 +1,22 @@
+/* 하트 모양의 체크박스 스타일 */
+.heart {
+    display: none;
+}
+
+.heart-label:before {
+    content: "\2665"; /* 유니코드로 하트 모양 추가 */
+    margin-right: 5px;
+    color: rgb(128, 128, 128);
+    cursor: pointer;
+}
+
+/* 체크된 상태에서 빨간색으로 변경 */
+.heart:checked + .heart-label:before {
+    color: red;
+}
+
+/* 좋아요 개수 표시 스타일 */
+.heart-count {
+    margin-left: 10px;
+    color: black;
+}

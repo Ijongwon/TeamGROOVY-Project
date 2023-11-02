@@ -1,0 +1,16 @@
+body{
+    background-color:rgb(243, 243, 243);
+    font-family: 'TTWanjunuricheR';
+}
+
+.uf {
+    align-items: center;
+    text-align: left;
+    margin-top: 10px;
+    list-style: none;
+    padding-left: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+

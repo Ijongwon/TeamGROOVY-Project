@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GROUP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/css/theme.css" rel="stylesheet" />
+    <link href="../assets/css/header.css" rel="stylesheet"/>
+
+    <style>
+        button {
+            background-color: #ffc8cd;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+
+            margin: 0px 5px;
+            width: 200px;
+            height: 50px;
+        }
+
+        input[type="text"] {
+            border: none;
+            border-bottom: 1px solid black;
+            outline: none;
+            height: 40px;
+            font-size: 15px;
+        }
+
+        input[type="number"] {
+            border: none;
+            border-bottom: 1px solid black;
+            outline: none;
+        }
+
+
+        .status input[type="radio"] {
+            display: none;
+        }
+
+        .status input[type="radio"] + span {
+            display: inline-block;
+            padding: 15px 10px;
+            margin: 10px 10px;
+            width : 12vw;
+            border: 1px solid #dfdfdf;
+            background-color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .status input[type="radio"]:checked + span {
+            background-color: #113a6b;
+            color: #ffffff;
+        }
+
+        .cate input[type="radio"] {
+            display: none;
+        }
+
+        .cate label {
+            display: block;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        .cate input[type="radio"] + span {
+            display: inline-block;
+            padding: 10px 10px;
+            width: 17vw;
+            border: 1px solid #dfdfdf;
+            background-color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+
+        }
+
+        .detail input[type="radio"] + span {
+            display: inline-block;
+            padding: 8px 8px;
+            width: 5vw;
+            border: 1px solid #dfdfdf;
+            background-color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+
+        }
+
+        .cate-detail {
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: center; !* 중앙 정렬 *!*/
+        }
+
+        .cate-detail label {
+
+            flex-basis: calc(33.33% - 40px); /* 3개씩 표시하므로 33.33%로 설정 */
+            margin: 2px 3px;
+        }
+
+        .cate input[type="radio"]:checked + span {
+            background-color: #ea50505c;
+            color: #ffffff;
+        }
+
+        .btncontainer {
+            position: absolute;
+            top: 87%;
+            left: 50%;
+
+            transform: translateX(-50%);
+            background-color: white; /* 배경색 설정 (선택사항) */
+            padding: 10px; /* 여백 설정 (선택사항) */
+        }
+
+        .btn {
+            background: linear-gradient(125deg, #cc95c0, #dbd4b4, #7aa1d2);
+            background-position: right;
+            background-size: 200%;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.4s;
+            display: inline;
+        }
+
+        .btn:hover {
+            background-position: left;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="header.html::header"></header>
+<main class="main" id="top">
+<div style="text-align:center; border: 1px solid #c5dbff; width: 30vw; height: 850px; margin: 45px auto; border-radius:5px;">
+    <div style="padding: 10px;">
+        <form action="/group/groupinsert" method="post" enctype="multipart/form-data">
+            <div id="insert1" style="margin-top: 20px;">
+                <p>그룹 이름</p>
+                <input type="text" id="name" name="groupname" placeholder="그룹의 성격을 나타낼 수 있는 이름을 정해주세요."
+                       style="width: 400px;">
+                <br>
+                <p style="margin-top: 40px;">그룹 커버사진 등록</p>
+                <label class="pic" style="cursor: pointer;">
+                    <img id="thumbnail" style="width: 150px; height: 150px; margin: 0px auto;" src="/assets/img/preview.png">
+                    <input type="file" name="pic" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                </label>
+            <br>
+                <p style="margin-top: 70px;">그룹 설명</p>
+            <textarea style="resize: none" class="form-control" name="groupexp" rows="10" placeholder="그룹 설명 작성"></textarea>
+            </div>
+            <div class="container" id="insert2" style="display: none; width: 69%; margin: auto;">
+                <p style="margin-top: 20px;">그룹 카테고리 설정</p>
+                <div class="cate row">
+
+                    <label class="cate">
+                        <input type="radio" id="at" name="groupcate" value="문화·예술">
+                        <span>문화·예술</span>
+                    </label>
+                    <div class="cate-detail" id="cateat">
+
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="ex" name="groupcate" value="운동">
+                        <span>운동</span>
+                    </label>
+                    <div class="cate-detail" id="cateex">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="fd" name="groupcate" value="음식">
+                        <span>음식</span>
+                    </label>
+                    <div class="cate-detail" id="catefd">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="hb" name="groupcate" value="취미">
+                        <span>취미</span>
+                    </label>
+                    <div class="cate-detail" id="catehb">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="tv" name="groupcate" value="여행">
+                        <span>여행</span>
+                    </label>
+                    <div class="cate-detail" id="catetv">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="sd" name="groupcate" value="자기계발">
+                        <span>자기계발</span>
+                    </label>
+                    <div class="cate-detail" id="catesd">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="sc" name="groupcate" value="동네·친목">
+                        <span>동네·친목</span>
+                    </label>
+                    <div class="cate-detail" id="catesc">
+                    </div>
+
+                    <label class="ft">
+                        <input type="radio" id="ft" name="groupcate" value="재테크">
+                        <span>재테크</span>
+                    </label>
+                    <div class="cate-detail" id="cateft">
+                    </div>
+
+                    <label class="cate">
+                        <input type="radio" id="fn" name="groupcate" value="외국어">
+                        <span>외국어</span>
+                    </label>
+                    <div class="cate-detail" id="catefn">
+                    </div>
+                </div>
+            </div>
+            <div id="insert3" style="display: none">
+                <p class="loc" style="margin-top: 20px;">위치</p>
+                <input type="text" id="loc" name="grouploc" placeholder="지역설정" style="margin-bottom: 100px;">
+                <p>최대 인원수</p>
+                <input type="number" id="max" name="maxp" style="margin-bottom: 100px;">
+                <br>
+                <div class="radio-group" style="display: flex; margin: 20px auto; justify-content: center; ">
+                    <label class="status">
+                        <input type="radio" id="fi" name="groupstatus" value="선착순">
+                        <span>선착순</span>
+                    </label>
+                    <br>
+                    <label class="status">
+                        <input type="radio" id="ad" name="groupstatus" value="승인제">
+                        <span>승인제</span>
+                    </label>
+                </div>
+                <div id="question" style="display: none;">
+                    <label class="adqs">
+                        <textarea style=" resize: none" class="form-control" name="adquestion" rows="5" cols="50" placeholder="승인 질문 작성"></textarea>
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="btncontainer">
+                <button class="btn" id="prevbtn" type="button" onclick="prev()">이전</button>
+                <button class="btn" id="nextbtn" type="button" onclick="next()">다음</button>
+                <button class="btn" id="subbtn" type="submit" style="background-color: #bb111f; display: none">생성</button>
+            </div>
+
+        </form>
+    </div>
+
+
+</div>
+</main>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+    //변수
+    let count = 1;
+    const categoryArrays = {
+        'at': ["전시", "영화", "공연", "뮤지컬", "콘서트", "연극", "연주회", "페스티발"],
+        'ex': ["산책", "축구", "야구", "배드민턴", "테니스", "탁구", "농구", "수영", "자전거", "골프", "다이어트"],
+        'fd': ["맛집투어", "요리", "카페", "칵테일", "커피", "술"],
+        'hb': ["보드게임", "사진", "그림", "노래", "댄스", "글쓰기", "악기", "방탈출", "음악", "게임", "반려동물", "만화"],
+        'tv': ["국내여행", "해외여행", "캠핑", "피크닉"],
+        'sd': ["스터디", "독서", "프로젝트", "창작"],
+        'sc': ["관심사", "동네"],
+        'ft': ["재테크", "주식", "창업", "부동산"],
+        'fn': ["영어", "일본어", "중국어", "기타"]
+    };
+
+
+    const prevbutton = document.getElementById('prevbtn')
+    const nextbutton = document.getElementById('nextbtn')
+    const statusfibutton = document.getElementById('fi')
+    const statusadbutton = document.getElementById('ad')
+
+
+    const f = document.forms[0]
+
+
+    //실행시 시작될것
+    prevbutton.style.display = 'none'
+
+
+    //함수
+
+
+    function next() {
+        const curdiv = document.getElementById('insert' + count)
+        curdiv.style.display = 'none'
+        count += 1
+
+        const nextdiv = document.getElementById('insert' + count)
+        nextdiv.style.display = 'block';
+
+        if (count != 1) {
+            prevbutton.style.display = 'inline'
+        }
+        if (count == 3) {
+            nextbutton.style.display = 'none'
+            document.getElementById('subbtn').style.display = 'inline'
+        }
+    }
+
+    function prev() {
+        const curdiv = document.getElementById('insert' + count)
+        curdiv.style.display = 'none'
+        document.getElementById('subbtn').style.display = 'none'
+        count -= 1
+
+        const prevdiv = document.getElementById('insert' + count)
+        prevdiv.style.display = 'block';
+
+        if (count == 1) {
+            prevbutton.style.display = 'none'
+        }
+        if (count != 3) {
+            nextbutton.style.display = 'inline'
+        }
+    }
+
+    function showDetailCategory(categoryId) {
+        $('.cate-detail').hide(); // 모든 상세 내용 숨김
+        const categoryArray = categoryArrays[categoryId];
+        const detailcate = 'cate' + categoryId;
+        const detailElement = document.getElementById(detailcate)
+        document.getElementById(detailcate).innerHTML = ''
+        categoryArray.forEach(item => {
+            console.log(item)
+            document.getElementById(detailcate).innerHTML +=
+                `<div class="cate col-md-4">
+                    <label class="detail">
+                    <input type="radio" name="groupdetail" value="${item}">
+                    <span>${item}</span>
+                    </label>
+                </div>
+                `
+        })
+        $('#cate' + categoryId).show(); // 선택된 카테고리에 대한 상세 내용 표시
+    }
+
+    function previewImage(input) {
+        var imagePreview = document.getElementById("imagePreview");
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    //클릭이벤트
+    statusfibutton.addEventListener('change', function () {
+        if (statusfibutton.checked) {
+            document.getElementById('question').style.display = 'none'
+            console.log('1')
+            console.log(f.adquestion.value)
+            f.adquestion.value = ''
+            console.log('2')
+            console.log(f.adquestion.value)
+        }
+    })
+
+    statusadbutton.addEventListener('change', function () {
+        if (statusadbutton.checked) {
+            document.getElementById('question').style.display = 'block'
+
+        }
+
+    })
+
+    $(document).ready(function () {
+        $('input:radio[name=groupcate]').change(function () {
+            var selectedId = $('input:radio[name=groupcate]:checked').attr('id')
+            console.log(selectedId)
+            showDetailCategory(selectedId)
+        });
+    });
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

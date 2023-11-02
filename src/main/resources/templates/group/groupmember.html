@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 관리</title>
+    <link href="../assets/css/theme.css" rel="stylesheet" />
+    <link href="../assets/css/header.css" rel="stylesheet"/>
+    <style>
+        html, body {
+            margin: 0px;
+        }
+        #popupBtn {
+            width: 150px;
+            height: 50px;
+            padding: 10px 5px;
+        }
+
+        #modalWrap {
+            display: none;
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        #modalBody {
+            width: 500px;
+            height: 300px;
+            padding: 30px 30px;
+            margin: 0 auto;
+            border: 1px solid #777;
+            background-color: #fff;
+        }
+
+        .closeBtn {
+            float:right;
+            font-weight: bold;
+            color: #777;
+            font-size:25px;
+            cursor: pointer;
+        }
+
+
+        #section1 {
+            position: absolute;
+            margin: 0px;
+            left: 5%;
+            width: 50%;
+            height: 1000px;
+
+            text-align: center;
+        }
+
+        #section2 {
+            border: 1px solid black;
+            position: absolute;
+            top: 0px;
+            left: 55%;
+            width: 40%;
+            height: 800px;
+        }
+
+        .hrs {
+            width: 400px;
+            border: 1px solid black;
+        }
+
+        #br {
+            display: inline-block;
+            width: 0px;
+            height: 40px;
+            border: 1px solid black;
+            vertical-align: middle;
+            margin: 0 60px;
+        }
+
+        #memberList {
+            width: 80%;
+            margin: auto;
+            margin-top: 40px;
+        }
+
+        .members {
+            display: flex; /* Use flexbox to distribute children evenly */
+        }
+
+        .img {
+            width: 20%; /* Each child takes 50% of the container's width */
+        }
+
+        .info {
+            width: 80%; /* Each child takes 50% of the container's width */
+            text-align: left; /* 왼쪽 정렬 추가 */
+            padding-left: 20px;
+        }
+
+        #profileimg {
+            width: 350px;
+            height: 350px;
+            margin: 20px auto 0px auto;
+        }
+
+        #userinfo {
+            margin: auto;
+            width: 350px;
+            height: 530px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .fncbtn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .btn{
+            font-family: 'TTWanjunuricheR';
+            font-weight: normal;
+        }
+
+
+    </style>
+</head>
+
+<body style="margin-top: 80px;">
+    <h3 style="text-align: center">멤버관리</h3>
+<header th:replace="header.html::header"></header>
+    <div id="section1" style="margin: 20px 0 20px 0;">
+        <span>
+            <a id="memlist">멤버 목록</a>
+            <hr id="br">
+            <a id="adlist">대기 목록</a>
+        </span>
+        <div id="memberList" class="scrollable" style="height: 700px; max-height: 700px; overflow-y: auto; "> <!-- 멤버 목록이 담길 div-->
+
+        </div>
+    </div>
+    <div id="section2" style="margin-top: 70px;">
+        <div id="profileimg">
+        </div>
+            <div id="userinfo">
+
+
+            </div>
+    </div>
+
+    <div id="modalWrap">
+        <div id="modalContent">
+            <div id="modalBody" >
+                <span class="closeBtn">&times;</span>
+                <div id="modaltext">
+                    <p>진짜 그룹에서 추방하시겠습니까?</p>
+                    <button onclick="kick()">네</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    const groupidx = '[[${group.groupidx}]]'
+    let id = ''
+    const groupmng = '[[${group.groupmng}]]'
+
+
+</script>
+    <script src="../assets/js/member.js"></script>
+</body>
+</html>

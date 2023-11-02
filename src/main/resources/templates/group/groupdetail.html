@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>GroupDetail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--<link href="../assets/css/theme.css" rel="stylesheet" />-->
+    <link href="../assets/css/header.css" rel="stylesheet"/>
+
+    <style>
+
+        html, body {
+            margin: 0px;
+            font-family:'TTWanjunuricheR' !important;
+        }
+
+        #modalWrap {
+            display: none;
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-backdrop {
+            display: none;
+        }
+        .modal-content{
+            font-family: 'TTWanjunuricheR';
+
+        }
+        .modalBody {
+            width: 500px;
+            height: 300px;
+            padding: 30px 30px;
+            margin: 0 auto;
+            border: 1px solid #777;
+            background-color: #fff;
+        }
+
+        .closeBtn {
+            float:right;
+            font-weight: bold;
+            color: #777;
+            font-size:25px;
+            cursor: pointer;
+        }
+
+        #pic {
+            margin: 0px;
+            width: 45%;
+            height: 500px;
+
+            text-align: center; /* 가로 중앙 정렬 */
+            display: flex;
+            /*align-items: center; !* 세로 중앙 정렬 *!*/
+            justify-content: center; /* 가로 중앙 정렬 */
+        }
+
+        #pic > img {
+            position: relative;
+            top: 50px;
+        }
+
+        #detail {
+            position: absolute;
+            top: 0px;
+            left: 45%;
+            width: calc(55% - 32px);
+            height: 500px;
+
+
+        }
+
+        #fuc,#members {
+            width: calc(100% - 64px);
+            margin: 0px auto;
+        }
+        #fuc{
+            .btn-primary {
+                --bs-btn-color: #fff;
+                --bs-btn-bg: #e5abd9;
+                --bs-btn-border-color: #e5abd9;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-hover-bg: #e17fcd;
+                --bs-btn-hover-border-color: #e5abd9;
+            }
+
+
+        }
+
+
+        #offcanvasRight {
+            font-family: 'TTWanjunuricheR';
+
+            .bg-primary {
+                --bs-bg-opacity: 1;
+                background-color: #e5abd9 !important;
+            }
+            .btn-primary {
+                --bs-btn-color: #fff;
+                --bs-btn-bg: #e5abd9;
+                --bs-btn-border-color: #e5abd9;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-hover-bg: #e17fcd;
+                --bs-btn-hover-border-color: #e5abd9;
+            }
+        }
+
+        .badge{
+            background-color: #e5abd9 !important;
+        }
+        #myButton {
+            position: absolute;
+            top: 10px; /* 원하는 위치의 상단 여백 (픽셀) */
+            left: 960px; /* 원하는 위치의 왼쪽 여백 (픽셀) */
+            /* 다른 스타일을 여기에 추가할 수 있습니다. */
+        }
+        a{
+            color: black;
+        }
+    </style>
+
+</head>
+<body>
+<header th:replace="header.html::header"></header>
+<div style="border: 2px solid rgb(196,196,196); margin: 60px 20px 20px 20px;">
+    <div style="height: 450px;">
+        <div id="pic">
+            <img class="rounded mx-auto d-block"
+                 id="grpic" th:src="|@{/uploads}/${dto.grouppic}|"
+                 width="800px" height="450px" style="object-fit:cover; margin-bottom: 50px">
+        </div>
+        <div id="detail" style="border-bottom: 1px solid rgb(196,196,196); margin-top: 135px; z-index: 0">
+            <div class="container text-center">
+                <div class="row"  style="margin-top: 25px;">
+                    <div class="col-1" style="text-align: left;">
+                        <img th:src="|@{/uploads}/${udto.userprofile}|" width="50px" height="50px" style="border-radius: 50%; object-fit:cover">
+                    </div>
+                    <div class="col-10" style="text-align: left; padding-left: 0px;">
+                        <h4 style="margin-bottom: 0">[[${dto.groupname}]]</h4>
+                        <span>[[${dto.groupmng}]]</span>
+                    </div>
+                    <div th:if="${dto.groupmng} == ${session.userid}" class="col" style="text-align: left; padding-left: 11px;">
+                        <button id="myButton" style="background-color: white; border: none;"><a th:href="@{/group/groupupdate(groupidx=${dto.groupidx})}"><img src="/assets/img/setting.png" style="width: 50px; height: 50px;"></a></button>
+                    </div>
+                </div>
+            </div>
+            <span class="badge rounded-pill">[[${dto.nowp}]]/[[${dto.maxp}]]</span>
+            <span class="badge rounded-pill">[[${dto.groupcate}]]</span>
+            <span class="badge rounded-pill">[[${dto.groupdetail}]]</span>
+            <br>
+            <span class="badge rounded-pill" style="background-color: #e5abd9">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>[[${dto.grouploc}]]</span>
+            <hr style="margin-top: 10px;">
+            <p>[[${dto.groupexp}]]</p>
+        </div>
+    </div>
+    <div id="fuc" style=" height: 100px; padding: 10px; margin-top: 50px;">
+        <form method="post">
+            <input type="hidden" name="groupidx" th:value="${dto.groupidx}">
+
+
+            <button id="heartonoff" type="button" style=" position: absolute; left: 44%; background-color: white; border: none; margin-left: 10px;">
+                <img id="heart" src="" style="width: 80px; height: 80px;">
+            </button>
+
+            <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" type="button" th:if="${grstatus} ==1"
+                    style=" position: absolute; left: 80%; width: 200px;height: 80px;">채팅방 참여하기</button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h3 class="offcanvas-title" id="offcanvasExampleLabel">[[${dto.groupname}]]의 채팅방</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <th:block th:each="vo:${list}">
+                            <ol class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a class="d-inline-flex focus-ring focus-ring-primary py-1 px-2 text-decoration-none border rounded-2" style="color: black" th:href="@{/chat/chatDetails(roomnum=${vo.roomnum})}">[[${vo.roomname}]]
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill" style="font-weight: normal; font-size: medium">참여중인 인원 : [[${vo.membercnt}]]</span>
+                                </li>
+                            </ol>
+                        </th:block>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" style="margin-top: 20px;">채팅방 만들기</button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">채팅방 만들기</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="roomname" class="col-form-label">채팅방 이름 :</label>
+                                        <input type="text" class="form-control" id="roomname" name="roomname">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" onclick="chatForm()">채팅방 만들기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="button" th:if="${adstatus} == 1"
+                    style=" position: absolute; left: 80%; width: 200px;height: 80px;">승인대기중</button>
+            <button class="btn btn-primary" th:unless="${adstatus} == 1 or ${grstatus} ==1" type="button" id="popupBtn"
+                    style=" position: absolute; left: 80%; width: 200px;height: 80px;">가입하기</button>
+
+
+            <th:block th:if="${session.userid == userid}">
+                <button type="button" style="background-color: white; border: none; position: absolute; left: 94%;" onclick="openCalendar()">
+                    <img src="../assets/img/calendar.png" style="width: 80px; height: 80px;">
+                </button>
+            </th:block>
+
+
+            <div id="modalWrap">
+                <div id="modalContent">
+                    <div class="modalBody" th:if="${dto.groupstatus} == '선착순'">
+                        <span class="closeBtn">&times;</span>
+                        <p>버튼을 누르시면 가입신청이 완료됩니다. 신청하시겠습니까?</p>
+                        <button class="btn btn-primary" type="button" onclick="insert()">가입신청</button>
+                    </div>
+                    <div class="modalBody" th:unless="${dto.groupstatus} == '선착순'">
+                        <span class="closeBtn">&times;</span>
+                        <p>질문의 답변을 작성해주세요.</p>
+                        <p>Q.[[${dto.adquestion}]]</p>
+                        <input name="adanswer" placeholder="답변작성">
+                        <button class="btn btn-primary" type="button" onclick="insertad()">가입신청</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="members">
+    <span style="font-weight: bold;">멤버 목록</span>
+    <a th:href="|@{groupmember(groupidx=${dto.groupidx})}|" th:if="${dto.groupmng} == ${session.userid}"> >멤버관리</a>
+    <th:block th:each="mem:${member}">
+        <div style="display: flex; align-items: flex-start; margin-bottom: 20px;" >
+            <img style="border-radius: 50%;width: 100px; height: 100px;" th:src="|@{/uploads}/${mem.userprofile}|">
+            <span style="margin-left: 20px;"><a th:href="@{/board/userFeed(userid=${mem.userid})}" style="text-decoration: none">[[${mem.userid}]]</a></span>
+            <img th:if="${mem.userid} == ${dto.groupmng}" style="margin-left: 10px;width: 30px; height: 30px;" src="/assets/img/crown.png">
+        </div>
+    </th:block>
+</div>
+
+
+<script type="text/javascript">
+    const ff = document.forms[0]
+    const groupidx = '[[${dto.groupidx}]]'
+    const userid = '[[${userid}]]'
+
+    const btn = document.getElementById('popupBtn');
+    const modal = document.getElementById('modalWrap');
+    const closeBtn = document.querySelector('.closeBtn');
+
+    btn.onclick = function() {
+        modal.style.display = 'block';
+    }
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function insert() {
+        ff.action = 'memberInsert'
+        ff.submit()
+    }
+
+    function insertad() {
+        ff.action = 'insertAdmission'
+        ff.submit()
+    }
+
+    function chatForm() {
+        ff.action = '/chat/chatForm'
+        ff.submit()
+    }
+
+    document.getElementById('chatform').addEventListener('click', function() {
+        var groupidx = groupidx
+        location.href = '/chat/chatForm?groupidx=' + groupidx;
+    });
+
+    function openCalendar() {
+        var url = "/user/calendar?groupidx=" + groupidx;
+        var width = 600;
+        var height = 600;
+        var left = (window.innerWidth - width) / 2;
+        var top = (window.innerHeight - height) / 2;
+
+        window.open(url, "_blank", "width=" + width + ", height=" + height + ", left=" + left + ", top=" + top);
+    }
+
+
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+<script src="../assets/js/detail.js"></script>
+
+</body>
+</html>

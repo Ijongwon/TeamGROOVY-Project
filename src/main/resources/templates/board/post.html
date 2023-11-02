@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>피드 업로드</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/post.css"/>
+    <link rel="stylesheet" href="../assets/css/header.css"/>
+</head>
+<style>
+    a{
+        color: black;
+
+    }
+
+</style>
+<body>
+<header th:replace="header.html::header"></header>
+<form action="post" method="post" enctype="multipart/form-data" class="post">
+    <h2>게시글 작성</h2>
+    <br>
+    <input type="text" th:value="${session.userid}" name="userid" readonly class="postid form-control mx-auto" required><br>
+
+    <textarea type="text" placeholder="글내용" name="content" class="content form-control mx-auto" required></textarea> <br>
+    사진은 4개까지 가능합니다. <br>(1개 이상 필수 업로드)<br><br>
+    <div class="imagefile">
+        <input type="file" name="pics" accept="image/*" id="inputfile" onchange="previewImage(this)"  required >
+        <input type="file" name="pics" accept="image/*" id="inputfile2"  onchange="previewImage2(this)"><br>
+        <input type="file" name="pics" accept="image/*"id="inputfile3"  onchange="previewImage3(this)">
+        <input type="file" name="pics" accept="image/*"id="inputfile4"  onchange="previewImage4(this)">
+    </div>
+    사진 첨부 1 : <label for="inputfile" class="inupload" style="cursor: pointer">upload</label><br>
+    사진 첨부 2 : <label for="inputfile2" class="inupload" style="cursor: pointer">upload</label><br>
+    사진 첨부 3 : <label for="inputfile3" class="inupload" style="cursor: pointer">upload</label><br>
+    사진 첨부 4 : <label for="inputfile4" class="inupload" style="cursor: pointer">upload</label>
+    <br>
+    <br>
+    <br>
+    <p>사진 미리보기</p>
+    <img id="thumbnail" style="width: 150px; height: 150px; margin: 0px 10px;" src="/assets/img/camera.png">
+    <img id="thumbnail2" style="width: 150px; height: 150px; margin: 0px 10px;" src="/assets/img/camera.png">
+    <img id="thumbnail3" style="width: 150px; height: 150px; margin: 0px 10px;" src="/assets/img/camera.png">
+    <img id="thumbnail4" style="width: 150px; height: 150px; margin: 0px 10px;" src="/assets/img/camera.png">
+    <br>
+    <br>
+    <button class="postbt">게시</button><br>
+</form>
+<script type="text/javascript">
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function previewImage2(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail2')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function previewImage3(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail3')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewImage4(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail4')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+</body>
+</html>

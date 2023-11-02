@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/feed.css"/>
+    <link rel="stylesheet" href="../assets/css/header.css"/>
+    <style>
+        /* 하트 모양의 체크박스 스타일 */
+        .like {
+            display: none;
+            font-size: 30px;
+        }
+
+
+        .like-label:before {
+            content: "\2665";
+            margin-right: 5px;
+            color: rgb(128, 128, 128);
+            cursor: pointer;
+        }
+
+        /* 체크된 상태에서 빨간색으로 변경 */
+        .like:checked + .like-label:before {
+            color: red;
+        }
+
+        /* 사진 넘기기 버튼 */
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-container .prevBtn,
+        .slider-container .nextBtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            outline: none; /* 포커스 테두리 제거 */
+        }
+
+        .slider-container .nextBtn {
+            margin-left: 30px;
+        }
+
+        .slider-container .prevBtn i,
+        .slider-container .nextBtn i {
+            font-size: 28px;
+            color: #777d84;
+        }
+
+        .commentBtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+            outline: none; /* 포커스 테두리 제거 */
+            color: rgb(128, 128, 128);
+            font-size: 18px;
+        }
+
+        .userFeedBtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        a {
+            color: black;
+
+        }
+
+
+    </style>
+
+</head>
+<body>
+<header th:replace="header.html::header"></header>  <!-- 레이아웃의 상단은 header.html -->
+
+<section>
+
+    <br>
+    <div class="feed" style="width: 700px; margin: 20px auto; padding: 10px; background-color: white">
+        <br>
+        <div class="user-feed-wrapper" style="padding-left: 55px; ">
+            <button class="userFeedBtn">
+                <input type="hidden" name="userid" th:value="${vo.userid}">
+                <a th:href="@{/board/userFeed(userid=${vo.userid})}">[[${vo.userid}]]</a>
+            </button>
+            <form method="post" action="delete" class="delete">
+                <th:block th:if="${session.userid == vo.userid}">
+                    <input type="hidden" name="post_idx" th:value="${vo.post_idx}">
+                    <button type="submit" class="icon-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </th:block>
+            </form>
+        </div>
+
+        <!-- 그림(업로드 이미지) 출력 부분 -->
+        <div class="slider-container">
+            <button class="prevBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <ul class="imageList"
+                style="display: flex; flex-direction: row; margin-bottom: 30px; list-style: none; overflow: hidden;">
+                <th:block th:each="pic, i: ${#strings.setSplit(vo.photo_url, ',')}">
+                    <li style="width: 500px; height: 500px; display: inline-block;">
+                        <img th:src="|@{/uploads}/${pic}|" width="100%" height="100%" style="object-fit: cover;">
+                    </li>
+                </th:block>
+            </ul>
+            <button class="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- 내용 및 기타 정보 출력 부분 -->
+        <div style="margin-left: 100px"> [[${vo.content}]]
+            <br>
+            <input style="margin-bottom: 50px;" type="checkbox" th:value="${vo.post_idx}" class="like"
+                   th:id="${vo.post_idx}" th:data-num="${vo.userid}">
+            <label th:for="${vo.post_idx}" class="like-label">좋아요</label>
+            <span th:id="span+${vo.post_idx}">[[${vo.likes_count}]]</span>
+
+            <!-- 댓글 버튼 -->
+            <button data-hidden-value="${vo.post_idx}" class="commentBtn" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal" th:attr="data-hidden-value=${vo.post_idx}" th:value="${vo.post_idx}"
+                    th:onclick="calbtn([[${vo.post_idx}]])">
+                <i class="fas fa-comment" style="color: #43464c;"></i>
+            </button>
+            <label class="comment-label">댓글</label>
+            <input type="hidden" name="post_idx" th:value="${vo.post_idx}">
+            <span th:text="${vo.comments_count}"></span>
+
+            <br>
+            <div>
+                [[${#dates.format(vo.created_at, 'yyyy-MM-dd HH:mm')}]]
+            </div>
+
+            <br>
+        </div>
+
+        <!-- 댓글 모달창 -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">댓글</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center px-5" style="height: 300px;">
+                        <ul id="sc" class="row list-unstyled" style="max-height: 250px;"></ul>
+                    </div>
+
+                    <div class="modal-footer" style="display: inline;">
+                        <form action="/board/comment" method="post">
+                            <input type="hidden" name="userid" th:value="${session.userid}" id="userid"/>
+                            <input type="hidden" name="post_idx" th:value="${vo.post_idx}" id="schDateInput"/>
+                            <input type="hidden" name="likeuser" th:value="${session.userid}"/>
+
+                            <input type="text" id="myInput" name="comment_content"
+                                   class="border-light rounded-pill outline-0 ps-3 bg-light" style="width: 70%;"
+                                   value="" required/>
+                            <button type="submit" class="btn btn-light rounded-pill"
+                                    style="float: right; border: 1px solid rgb(128,128,128);">등록
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script type="text/javascript">
+    const likeuser = '[[${session.userid}]]'      //string으로 사용되도록 ''표시함
+</script>
+
+<script type="text/javascript" src="/assets/js/socketConnect.js"></script>
+
+<script type="text/javascript">
+
+    // const ff = document.forms[1]
+    document.querySelector(".feed").addEventListener('click', e => {
+        e.stopPropagation()
+        const target = e.target
+        if (target.tagName != 'INPUT') return
+        if (likeuser != '') {      //로그인 되었을 때만 이벤트 리스너 등록
+            const post_idx = target.getAttribute("id")
+            const value = target.checked     //참,거짓
+            const userid = target.getAttribute("data-num")
+            likes(post_idx, value, userid)
+            //좋아요 카운트 변경은 응답받은 것으로 변경 또는
+            //아래와 같이 간단히 좋아요 카운트를 변경할 태그요소를 가져와 값 변경하기
+            const spanEle = document.querySelector('#span' + post_idx)
+            if (target.checked) spanEle.innerHTML = Number(spanEle.innerHTML) + 1    //원래 값 +1
+            else spanEle.innerHTML = Number(spanEle.innerHTML) - 1      //체크가 해제되어 false 이면 원래 값 -1
+            console.log(spanEle)
+
+        } else {
+            alert('로그인이 필요합니다.')
+            e.preventDefault()
+
+        }
+    })      //이벤트 리스너 끝
+
+    let like = [[${myLikes}]]      //내가 좋아요 한 글번호 배열 가져와서 체크박스 상태 설정하기
+    console.log(like)
+    if (!like) {
+        like = []
+    }
+    if (like && like.length > 0) {
+        document.querySelectorAll('.like').forEach(item => {
+            if (like.includes(Number(item.value))) item.checked = true;
+            else item.checked = false;
+        })
+    }
+
+
+</script>
+
+
+<!-- 댓글 모달 자바스크립트-->
+<script src="/assets/js/commentModal_detail.js"></script>
+
+<!-- 사진 넘기기 자바스크립트-->
+<script src="/assets/js/feedImage.js"></script>
+
+
+<!-- jQuery 로드 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JavaScript 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

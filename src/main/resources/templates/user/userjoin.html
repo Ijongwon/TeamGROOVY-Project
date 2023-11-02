@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/352c53403e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/assets/css/join.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-3">회원가입</h4>
+
+            <form class="validation-form" action="userjoin" method="post" enctype="multipart/form-data"
+                  onsubmit="return validateForm()">
+
+                <div class="text-center">
+                    <label class="pic" style="cursor: pointer;">
+                        <img id="thumbnail" style="width: 150px; height: 150px; margin: 0px auto; border-radius: 50%;"
+                             src="../assets/img/defaultuserpro.png">
+                        <input type="file" name="pic" accept="image/*" style="display: none;"
+                               onchange="previewImage(this)">
+                    </label>
+                    <p class="my-1">프로필 사진</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="userid">아이디</label>
+                        <input type="text" class="form-control id" id="userid"
+                               placeholder="4~20자리 영 소문자, 숫자" name="userid" required>
+
+                        <!-- 아이디 조회결과가 처리 메시지 보일곳-->
+                        <div class="form-text" id="idMessage">
+                            <span class="text-sm"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="userpassword">비밀번호</label>
+                        <input type="password" class="form-control pw" id="userpassword"
+                               placeholder="8~24자 영 소문자, 특수 문자와 숫자" name="userpassword" required>
+                        <div id="passwordMessage" class="text-sm"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username">이름</label>
+                    <input type="text" class="form-control name" id="username"
+                           placeholder="이름을 입력해주세요." name="username" required>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="useremail">이메일</label>
+                    <input type="text" class="form-control email" id="useremail"
+                           placeholder="user@user.com" name="useremail" required>
+                    <div class="form-text" id="emailMessage">
+                        <span class="text-sm"></span><!-- 결과가 처리 메시지 보일곳-->
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="userage">나이</label>
+                    <input type="number" class="form-control age" id="userage"
+                           placeholder="18세부터 이용 가능합니다." name="userage" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="usergender">성별</label>
+                    <select class="form-control gender" id="usergender" name="usergender" required>
+                        <option value="선택">선택</option>
+                        <option value="남">남</option>
+                        <option value="여">여</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="userphone">번호</label>
+                    <input type="text" class="form-control cellphoneNo" id="userphone"
+                           placeholder="ex) 010-1234-1234" name="userphone" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="userintro">자기소개</label>
+                    <textarea type="text" class="form-control userintro " id="userintro" style="resize: none;"
+                              placeholder="30자 이내로 자기소개를 입력해주세요." name="userintro" required></textarea>
+                </div>
+
+
+                <div class="my-4 text-center">
+                    <button type="submit" class="btn">회원가입</button>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    function previewImage(input) {
+        var imagePreview = document.getElementById("imagePreview");
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                // 이미지를 미리 보기로 표시
+                var img = document.getElementById('thumbnail')
+                img.src = e.target.result;
+                img.style.maxWidth = "150px"; // 이미지의 최대 너비 설정
+                img.style.maxHeight = "150px"; // 이미지의 최대 높이 설정
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script type="text/javascript" src="../assets/js/join.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

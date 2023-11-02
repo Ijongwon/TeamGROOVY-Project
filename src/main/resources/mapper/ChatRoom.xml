@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.ChatRoomMapper">
+
+
+    <insert id="makechat">
+    insert into chatroom(roomnum,roomname,roomdate,groupidx)
+    values (roomnum_seq.nextval,#{roomname},current_timestamp,#{groupidx})
+    </insert>
+
+    <select id="roomlist" resultType="ChatRoom">
+        select * from chatroom
+        where groupidx = #{groupidx} order by roomdate desc
+    </select>
+
+    <select id="findByNum" resultType="ChatRoom">
+        select * from chatroom
+        where roomnum =#{roomnum}
+    </select>
+
+    <select id="roomNum" resultType="int">
+        select roomnum from chatroom
+        where roomnum = #{roomnum}
+    </select>
+
+    <select id="selectByid">
+    SELECT roomnum,roomname,groupidx,roomdate FROM chatroom cm
+    JOIN CHATMESSAGE c
+    on cm.ROOMNUM = c.CM_ROOMNUM
+    WHERE CM_SENDER = #{userid} and groupidx=#{groupidx}
+    GROUP BY roomnum, roomname, groupidx, roomdate
+    ORDER BY roomdate ASC
+    </select>
+
+    <update id="memberupcnt">
+        UPDATE CHATROOM SET MEMBERCNT = MEMBERCNT+1
+        WHERE roomnum= #{roomnum}
+    </update>
+
+    <update id="memberdowncnt">
+        UPDATE CHATROOM SET MEMBERCNT = MEMBERCNT-1
+        WHERE roomnum= #{roomnum}
+    </update>
+
+
+
+</mapper>
+

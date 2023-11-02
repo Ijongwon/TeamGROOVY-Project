@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.ScheduleMapper">
+
+    <select id="selectByGroupIdx" resultType="ScheduleDto">
+        SELECT *
+        FROM SCHEDULE
+        WHERE GROUPIDX = #{groupidx}
+    </select>
+    <select id="selectSchByDate" resultType="ScheduleDto">
+        SELECT SCHTITLE, SCHCONTENTS, SCHIDX
+        FROM SCHEDULE
+        WHERE TO_CHAR(SCHDATE, 'YYYY-MM-DD') = #{schdate, jdbcType=DATE} AND GROUPIDX = #{groupidx}
+        ORDER BY SCHIDX DESC
+    </select>
+    <select id="selectOne" resultType="ScheduleDto">
+        SELECT *
+        FROM SCHEDULE
+        WHERE SCHIDX = #{schidx}
+    </select>
+    <select id="isCount">
+        SELECT count(*)
+        FROM
+            SCHEDULE
+        WHERE TO_CHAR(SCHDATE, 'YYYY-MM-DD') = #{schdate, jdbcType=DATE} AND GROUPIDX = #{groupidx}
+    </select>
+    <insert id="schinsert">
+        INSERT INTO schedule (SCHIDX, GROUPIDX, SCHDATE, USERID, SCHTITLE, SCHCONTENTS)
+        VALUES (SCHEDULE_SEQ.nextval, #{groupidx}, #{schdate}, #{userid}, #{schtitle}, #{schcontents})
+    </insert>
+    <delete id="delete">
+        DELETE
+        FROM SCHEDULE
+        WHERE SCHIDX = #{schidx}
+    </delete>
+    <update id="update">
+        UPDATE SCHEDULE
+        SET SCHTITLE=#{schtitle},SCHCONTENTS=#{schcontents}
+        WHERE SCHIDX=#{schidx}
+    </update>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.ChatMessageMapper">
+
+    <select id="chatlist" resultType="ChatMessage">
+        select * from chatMessage
+        where cm_roomnum= ${roomnum}
+        order by senddate asc
+    </select>
+
+    <insert id="chatinsert">
+        insert into chatMessage (cm_roomnum,cm_sender,content,senddate)
+        values (#{cm_roomnum},#{cm_sender},#{content},current_timestamp)
+    </insert>
+
+    <select id="chatmember" resultType="String">
+        select cm_sender from chatMessage
+        where cm_roomnum = ${roomnum} group by cm_sender
+    </select>
+
+</mapper>

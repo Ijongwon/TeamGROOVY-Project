@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.PostMapper">
+
+	<select id="getList" >
+		select * from posts
+		<include refid="search"></include>
+		         order by post_idx desc
+	</select>
+
+	<insert id="save" >
+		insert into posts(post_idx,userid,photo_url,content,created_at)
+		values(posts_idx_seq.nextval,#{userid},#{photo_url},#{content}, current_timestamp)
+	</insert>
+
+	<select id="getmylist" parameterType="String" resultType="PostDTO">
+		select * from posts
+		where userid = #{userid} <!--<include refid="search"></include>-->
+		order by created_at desc
+	</select>
+
+	<select id="getPostByIdx" parameterType="int" resultType="PostDTO">
+		SELECT * FROM posts WHERE post_idx = #{post_idx}
+	</select>
+
+	<delete id="remove">
+		delete
+		from posts
+		where post_idx = #{post_idx}
+	</delete>
+
+	<delete id="removeCommentAll">
+		delete
+		from comments
+		where post_idx = #{post_idx}
+	</delete>
+
+
+	<!-- ////////////////좋아요////////////////// -->
+	<!-- 좋아요 갯수 업데이트 -->
+	<update id="updateLikeCount" parameterType="int">
+		UPDATE posts SET likes_count =
+		(SELECT count(*) FROM likes WHERE post_idx = #{post_idx})
+		WHERE post_idx = #{post_idx}
+	</update>
+	
+	<!--  로그인 사용자의 좋아요 한 글 목록-->
+	<select id="myLikes" parameterType="String" resultType="int">
+		SELECT post_idx FROM likes
+		WHERE likeuser = #{likeuser}
+	</select>
+	
+	<!-- 좋아요 등록 -->
+	<insert id="likeTrue" parameterType="LikeDTO">
+		INSERT INTO likes(likeuser,post_idx)
+		VALUES (#{likeuser},#{post_idx})
+	</insert>
+	
+	<!-- 좋아요 취소 -->
+	<insert id="likeFalse" parameterType="LikeDTO">
+		DELETE FROM likes
+		WHERE post_idx = #{post_idx} AND likeuser=#{likeuser}
+	</insert>
+	
+	<!--  idx글 번호의 좋아요 갯수-->
+	<select id="likes" parameterType="int" resultType="int">
+		select likes_count
+		from posts
+		where post_idx = #{post_idx}
+	</select>
+
+	<select id="pagelist"  parameterType="java.util.Map">
+		SELECT * FROM
+		(SELECT rownum r ,f.* FROM
+		(SELECT * FROM posts
+		<include refid="search"></include>
+		ORDER BY post_idx DESC) f)
+		WHERE r BETWEEN #{start} AND #{end}
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT count(*) FROM posts
+		<include refid="search"></include>
+	</select>
+	<sql id="search">
+		<where>
+			<if test="types !=null and types.length >0">
+				<foreach collection="types" item="type" open="(" close=")" separator=" OR ">
+					<if test="type=='u'.toString()"> userid like '%' || #{keyword} || '%' </if>
+					<if test="type=='c'.toString()"> content like '%' || #{keyword} || '%' </if>
+				</foreach>
+			</if>
+
+		</where>
+	</sql>
+
+
+
+</mapper>
+

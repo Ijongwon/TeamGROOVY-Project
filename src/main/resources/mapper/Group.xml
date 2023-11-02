@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.iclass.mvc.dao.GroupMapper">
+
+    <!-- 그룹관련 -->
+    <insert id="insert">
+        insert into groups (groupidx,groupmng,groupname,groupcate,groupdetail,maxp,groupstatus
+        ,adquestion,groupexp,grouppic,grouploc,groupdate)
+        values (#{groupidx,jdbcType=VARCHAR},#{groupmng},#{groupname},#{groupcate},#{groupdetail,jdbcType=VARCHAR}
+        ,#{maxp},#{groupstatus},#{adquestion,jdbcType=VARCHAR},#{groupexp},#{grouppic,jdbcType=VARCHAR},#{grouploc},sysdate)
+        <selectKey keyProperty="groupidx" order="AFTER" resultType="String">
+            SELECT groupidx FROM (SELECT groupidx FROM groups ORDER BY groupdate DESC) WHERE rownum = 1
+        </selectKey>
+    </insert>
+
+    <select id="selectAll">
+        select * from groups
+        <include refid="search"></include>
+        order by groupdate desc
+    </select>
+
+    <select id="selectByidx">
+        SELECT * FROM GROUPS WHERE groupidx = #{groupidx}
+    </select>
+
+    <select id="selectBycate">
+        SELECT * FROM GROUPS
+            WHERE groupcate = #{groupcate}
+        <include refid="search" />
+        order by groupdate desc
+    </select>
+
+
+    <sql id="search">
+        <if test="groupcate == null">
+            <where>
+                <if test="keyword != null and keyword.length > 0">
+                    (groupname like '%' || #{keyword} || '%' OR groupdetail like '%' || #{keyword} || '%')
+                </if>
+            </where>
+        </if>
+        <if test="groupcate != null">
+            <if test="keyword != null and keyword.length > 0">
+                <trim prefix="and">
+                    (groupname like '%' || #{keyword} || '%' OR groupdetail like '%' || #{keyword} || '%')
+                </trim>
+            </if>
+        </if>
+    </sql>
+
+
+    <select id="selectcate">
+        SELECT GROUPIDX FROM
+            (SELECT GROUPIDX, GROUPCATE FROM GROUPS WHERE GROUPIDX like #{groupcate} || '%' ORDER BY GROUPIDX DESC)
+        WHERE ROWNUM =1
+    </select>
+
+    <update id="updatenowp">
+        update groups set nowp = nowp+1 where groupidx = #{groupidx}
+    </update>
+    <update id="downdatenowp">
+        update groups set nowp = nowp-1 where groupidx = #{groupidx}
+    </update>
+
+    <update id="groupupdate">
+        update groups set groupname = #{groupname}, groupcate = #{groupcate}, groupdetail = #{groupdetail}, maxp = #{maxp}
+        , groupstatus = #{groupstatus}, adquestion = #{adquestion,jdbcType=VARCHAR}, groupexp = #{groupexp}, grouppic = #{grouppic}, grouploc = #{grouploc}
+        where groupidx = #{groupidx}
+    </update>
+
+    <!-- 멤버관련 -->
+    <insert id="memberInsert">
+        INSERT INTO GROUPMEMBER VALUES
+            (#{groupidx},#{userid},sysdate,#{userprofile})
+    </insert>
+
+    <delete id="memberDelete">
+        DELETE FROM GROUPMEMBER
+        WHERE groupidx = #{groupidx} AND userid = #{userid}
+    </delete>
+
+    <select id="memberList">
+        select * FROM GROUPMEMBER
+        WHERE GROUPIDX = #{groupidx}
+    </select>
+
+    <select id="isInGroup">
+        select COUNT(*) FROM GROUPMEMBER
+        WHERE GROUPIDX = #{groupidx} AND userid = #{userid}
+    </select>
+
+    <select id="groupmemberdetail">
+        SELECT GROUPIDX,u.USERID, u.USERNAME, u.USERINTRO, GROUPJOINDATE  FROM USERS u
+            JOIN GROUPMEMBER g
+            ON u.USERID = g.USERID
+        WHERE u.userid = #{userid} AND groupidx = #{groupidx}
+    </select>
+
+    <update id="updateGroupMng">
+        update groups set groupmng = #{userid} WHERE groupidx = #{groupidx}
+    </update>
+
+    <select id="selectByuserid">
+    select * from groupmember where userid= #{userid}
+    </select>
+
+    <!-- 채팅 -->
+    <select id="mychatgroupname">
+    SELECT * FROM GROUPS g JOIN GROUPMEMBER g2 ON g.groupidx = g2.GROUPIDX WHERE USERID = #{userid}
+    </select>
+
+
+    <!-- 승인대기 -->
+    <insert id="insertAdmission">
+        insert into GROUPADMISSION VALUES
+            (#{groupidx},#{userid},#{adanswer},'승인대기',#{userprofile})
+    </insert>
+
+    <select id="admissionList">
+        SELECT u.userid,u.USERNAME ,userage,usergender,u.USERPROFILE,ADANSWER,adstatus FROM USERS u
+            JOIN GROUPADMISSION g
+            ON u.USERID = g.USERID
+            Where groupidx = #{groupidx} AND adstatus = '승인대기'
+    </select>
+
+    <select id="admissionMemList">
+        SELECT u.userid,u.USERNAME ,userage,usergender,u.USERPROFILE,ADANSWER FROM USERS u
+               JOIN GROUPADMISSION g
+               ON u.USERID = g.USERID
+        Where groupidx = #{groupidx} AND u.userid = #{userid} AND adstatus = '승인대기'
+    </select>
+
+    <select id="Admission">
+        select COUNT(*) FROM GROUPADMISSION
+        WHERE GROUPIDX = #{groupidx} AND userid = #{userid} AND adstatus = '승인대기'
+    </select>
+
+    <update id="updateAdmission">
+        update GROUPADMISSION set adstatus = #{adstatus}
+        WHERE GROUPIDX = #{groupidx} AND userid = #{userid}
+    </update>
+
+    <select id="myadmission">
+        SELECT * FROM GROUPS g JOIN GROUPADMISSION g2 ON g.groupidx = g2.GROUPIDX WHERE USERID = #{userid} AND adstatus = '승인대기'
+    </select>
+
+
+    <!-- 즐겨찾기 -->
+    <select id="isHeartGroup">
+        select COUNT(*) FROM GROUPHEARTS
+        WHERE GROUPIDX = #{groupidx} AND userid = #{userid}
+    </select>
+
+    <insert id="insertHeart">
+        INSERT INTO grouphearts VALUES
+           (#{groupidx},#{userid})
+    </insert>
+
+    <delete id="deleteHeart">
+        delete FROM grouphearts
+        WHERE GROUPIDX = #{groupidx} AND userid = #{userid}
+    </delete>
+
+    <select id="myHeart">
+        SELECT * FROM GROUPS g JOIN grouphearts g2 ON g.groupidx = g2.GROUPIDX WHERE USERID = #{userid}
+    </select>
+
+</mapper>
